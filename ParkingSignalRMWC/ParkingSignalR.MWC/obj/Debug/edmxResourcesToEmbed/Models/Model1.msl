@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ProjectSignalRDBModelStoreContainer" CdmEntityContainer="ProjectSignalRDBEntities">
+    <EntitySetMapping Name="Floor">
+      <EntityTypeMapping TypeName="ProjectSignalRDBModel.Floor">
+        <MappingFragment StoreEntitySet="Floor">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Slots">
+      <EntityTypeMapping TypeName="ProjectSignalRDBModel.Slots">
+        <MappingFragment StoreEntitySet="Slots">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="FloorId" ColumnName="FloorId" />
+          <ScalarProperty Name="SlotTypeId" ColumnName="SlotTypeId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SlotTypes">
+      <EntityTypeMapping TypeName="ProjectSignalRDBModel.SlotTypes">
+        <MappingFragment StoreEntitySet="SlotTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SlotTypeName" ColumnName="SlotTypeName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

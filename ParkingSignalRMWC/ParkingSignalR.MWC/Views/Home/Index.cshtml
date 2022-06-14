@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <script src="~/Content/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/Content/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:5001/myhub")
+            .withAutomaticReconnect().build();
+        
+       
+        $(document).ready(() => {
+            getCurrentSlots();
+
+            connection.onreconnecting(function () {
+                $("#conStatus").text(connection.state);
+            });
+            connection.onreconnected(function () {
+                $("#conStatus").text(connection.state);
+            });
+            connection.onclose(function () {
+                $("#conStatus").text(connection.state);
+            });
+
+            async function start() {
+                try {
+                    await connection.start();
+      
+                } catch (e) {
+                    setTimeout(() => start());
+                }
+            }
+            start();
+            $("#conStatus").text(connection.state);
+           
+
+            connection.on("receiveData", Floor => {
+                getCurrentSlots();
+            });
+
+
+        });
+        function setChangeStatus(Id, currentStatus) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/ChangeStatus",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ 'Id': Id, 'currentStatus': currentStatus }),
+                dataType: "json",
+                success: function (response) {
+                    connection.invoke("SendDataAsync", response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        function getCurrentSlots() {
+            $.ajax({
+                type: "POST",
+                url: "/Home/getSlots",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $("#FloorOne").html(response);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    </script>
+
+
+    <title></title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <div class="alert alert-info">
+                Bağlantı Durumu: <strong id="conStatus"></strong>
+            </div>
+        </div>
+    </div>
+
+    <div id="FloorOne">
+
+    </div>
+</body>
+</html>
+

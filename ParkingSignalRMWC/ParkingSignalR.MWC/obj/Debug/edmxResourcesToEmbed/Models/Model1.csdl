@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjectSignalRDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Floor">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Capacity" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Slots" Relationship="Self.FK_Slots_Floor_FloorId" FromRole="Floor" ToRole="Slots" />
+  </EntityType>
+  <EntityType Name="Slots">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="FloorId" Type="Int32" Nullable="false" />
+    <Property Name="SlotTypeId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Floor" Relationship="Self.FK_Slots_Floor_FloorId" FromRole="Slots" ToRole="Floor" />
+    <NavigationProperty Name="SlotTypes" Relationship="Self.FK_Slots_SlotTypes_SlotTypeId" FromRole="Slots" ToRole="SlotTypes" />
+  </EntityType>
+  <EntityType Name="SlotTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SlotTypeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Slots" Relationship="Self.FK_Slots_SlotTypes_SlotTypeId" FromRole="SlotTypes" ToRole="Slots" />
+  </EntityType>
+  <Association Name="FK_Slots_Floor_FloorId">
+    <End Role="Floor" Type="Self.Floor" Multiplicity="1" />
+    <End Role="Slots" Type="Self.Slots" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Floor">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Slots">
+        <PropertyRef Name="FloorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Slots_SlotTypes_SlotTypeId">
+    <End Role="SlotTypes" Type="Self.SlotTypes" Multiplicity="1" />
+    <End Role="Slots" Type="Self.Slots" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SlotTypes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Slots">
+        <PropertyRef Name="SlotTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProjectSignalRDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Floor" EntityType="Self.Floor" />
+    <EntitySet Name="Slots" EntityType="Self.Slots" />
+    <EntitySet Name="SlotTypes" EntityType="Self.SlotTypes" />
+    <AssociationSet Name="FK_Slots_Floor_FloorId" Association="Self.FK_Slots_Floor_FloorId">
+      <End Role="Floor" EntitySet="Floor" />
+      <End Role="Slots" EntitySet="Slots" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Slots_SlotTypes_SlotTypeId" Association="Self.FK_Slots_SlotTypes_SlotTypeId">
+      <End Role="SlotTypes" EntitySet="SlotTypes" />
+      <End Role="Slots" EntitySet="Slots" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
